@@ -1,11 +1,13 @@
 import dayjs from 'dayjs';
 import Bike from '../models/Bike';
+import Travel from '../models/Travel';
 import ChartDataProps from '../models/ChartDataProps';
 import Community from '../models/Community';
 import DashboardInfo from '../models/DashboardInfo';
 import { GenderTypes } from '../models/GenderTypes';
-import User from '../models/User';
+import UserNew from '../models/UserNew';
 import StringUtils from '../utils/StringUtils';
+
 
 const DashboardInfoInitialValues: DashboardInfo = {
   usersQuantity: 0,
@@ -34,7 +36,8 @@ const DashboardInfoInitialValues: DashboardInfo = {
 const mapResultToData = (
   communitiesData: Community[],
   bikesData: Bike[],
-  usersData: User[],
+  usersData: UserNew[],
+  travelData: Travel[],
 ): DashboardInfo => {
   const dashboardInfo: DashboardInfo = DashboardInfoInitialValues;
 
@@ -43,41 +46,44 @@ const mapResultToData = (
   dashboardInfo.bikesQuantity = bikesData.length;
 
   dashboardInfo.destination = getDestinations(bikesData);
-  dashboardInfo.bikesInUse = getBikesInUseQuantity(bikesData);
-  dashboardInfo.newUsers = getNewUsers(usersData);
-  dashboardInfo.womenUsers = getWomenUsers(usersData);
+  dashboardInfo.bikesInUse = getBikesInUseQuantity(bikesData);//ok
+  dashboardInfo.newUsers = getNewUsers(usersData); //ok
+  dashboardInfo.womenUsers = getWomenUsers(usersData);//ok
   dashboardInfo.travelsWithRideGiven = getTravelsWithRideGiven(bikesData);
-  dashboardInfo.incidentsHappened = getIncidentsHappened(bikesData);
-  dashboardInfo.travelsDone = getTravelsDone(bikesData);
+  dashboardInfo.incidentsHappened = getIncidentsHappened(travelData);//TODO refatorar chamada
+  dashboardInfo.travelsDone = getTravelsDone(travelData);//TODO refatorar chamada
   dashboardInfo.withdrawalsReason = getWithdrawalsReason(bikesData);
-  dashboardInfo.racialInfo = getRacialInfo(usersData);
-  dashboardInfo.gender = getGenderInfo(usersData);
-  dashboardInfo.schooling = getSchoolingInfo(usersData);
-  dashboardInfo.age = getAgeInfo(usersData);
-  dashboardInfo.income = getIncomeInfo(usersData);
+  dashboardInfo.racialInfo = getRacialInfo(usersData);//ok
+  dashboardInfo.gender = getGenderInfo(usersData);//ok
+  dashboardInfo.schooling = getSchoolingInfo(usersData);//ok
+  dashboardInfo.age = getAgeInfo(usersData);//ok
+  dashboardInfo.income = getIncomeInfo(usersData);//ok
   dashboardInfo.travelTimeInMinutes = getTimeInMinutesFromTravel(bikesData);
 
   return dashboardInfo;
 };
 
-function getTravelsDone(bikesData: Bike[]): number {
-  let travelsDone = 0;
-  bikesData.forEach(bike => {
-    if (bike.devolutions?.length > 0) {
-      travelsDone += bike.devolutions?.length;
+export function getTravelsDone(travels: Travel[]): number { //ok
+  
+  if(!travels) return 0;
+
+  let count = 0;
+  travels.forEach(travel => {
+    if (travel.finished_at?.length > 0) {
+      count++;
     }
   });
-  return travelsDone;
+
+  return count;
 }
 
-function getIncidentsHappened(bikesData: Bike[]): number {
+export function getIncidentsHappened(travels: Travel[]): number { //ok
   let incidents = 0;
-  bikesData.forEach(bike => {
-    if (bike.devolutions && bike.devolutions.length > 0) {
-      bike.devolutions.forEach(devolution => {
-        incidents += devolution.quiz.problemsDuringRiding === 'Sim' ? 1 : 0;
-      });
-    }
+
+  if(!travels) return 0;
+
+  travels.forEach(travel => {
+        incidents += travel.problemsDuringRiding === 'Sim' ? 1 : 0;
   });
   return incidents;
 }
@@ -126,15 +132,15 @@ function groupArrayToChartDataProps(allItems: string[]): ChartDataProps[] {
   return chartDataProps.sort((a, b) => b.quantity - a.quantity);
 }
 
-function getBikesInUseQuantity(bikeArray: Bike[]): number {
+export function getBikesInUseQuantity(bikeArray: Bike[]): number { //ok
   return bikeArray.filter(bike => bike.inUse).length;
 }
 
-function getNewUsers(users: User[]): number {
+export function getNewUsers(users: UserNew[]): number { //ok
   return users.filter(user => user.userQuiz?.alreadyUseBPR).length;
 }
 
-function getWomenUsers(users: User[]): number {
+export function getWomenUsers(users: UserNew[]): number {//ok
   const femininGender: GenderTypes = 'Feminino';
   return users.filter(user => user.gender === femininGender).length;
 }
@@ -145,7 +151,7 @@ function getTravelsWithRideGiven(bikes: Bike[]): number {
   ).length;
 }
 
-function getRacialInfo(users: User[]): ChartDataProps[] {
+export function getRacialInfo(users: UserNew[]): ChartDataProps[] { //ok
   const result = [] as string[];
 
   users.forEach(user => {
@@ -161,14 +167,14 @@ function getRacialInfo(users: User[]): ChartDataProps[] {
   return groupArrayToChartDataProps(result);
 }
 
-function getGenderInfo(users: User[]): ChartDataProps[] {
+export function getGenderInfo(users: UserNew[]): ChartDataProps[] { //ok
   const genderArray: GenderTypes[] = users.map(user => {
     return user.gender;
   });
   return groupArrayToChartDataProps(genderArray);
 }
 
-function getSchoolingInfo(users: User[]): ChartDataProps[] {
+export function getSchoolingInfo(users: UserNew[]): ChartDataProps[] { //ok
   const schoolingArray = users.map(user => {
     return StringUtils.normalizeSchoolingInfo(
       user.schooling,
@@ -178,15 +184,15 @@ function getSchoolingInfo(users: User[]): ChartDataProps[] {
   return groupArrayToChartDataProps(schoolingArray);
 }
 
-function getAgeInfo(users: User[]): ChartDataProps[] {
+export function getAgeInfo(users: UserNew[]): ChartDataProps[] { //ok
   const result: string[] = [];
   users.forEach(user => {
-    result.push(StringUtils.normalizeAgeInfo(user));
+    result.push(StringUtils.normalizeAgeInfo(user.age));
   });
   return groupArrayToChartDataProps(result);
 }
 
-function getIncomeInfo(users: User[]): ChartDataProps[] {
+export function getIncomeInfo(users: UserNew[]): ChartDataProps[] { //ok
   const result = users
     .map(item => item?.income)
     .map(item => {

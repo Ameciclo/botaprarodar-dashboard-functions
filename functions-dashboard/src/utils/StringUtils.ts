@@ -65,8 +65,8 @@ const calculateAge = (dateOfBirth: string): number => {
   return todayDate.diff(birthDate, 'year');
 };
 
-const normalizeAgeInfo = (user: User): string => {
-  const age = calculateAge(user.age);
+const normalizeAgeInfo = (dateOfBirth: string): string => {
+  const age = calculateAge(dateOfBirth);
 
   if (age > 0 && age <= 10) return 'Entre 0 e 10 anos';
   if (age > 10 && age <= 20) return 'Entre 11 e 20 anos';
