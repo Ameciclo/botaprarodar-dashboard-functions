@@ -45,20 +45,20 @@ const mapResultToData = (
   dashboardInfo.communitiesQuantity = communitiesData.length;
   dashboardInfo.bikesQuantity = bikesData.length;
 
-  dashboardInfo.destination = getDestinations(bikesData);
+  dashboardInfo.destination = getDestinations(travelData);
   dashboardInfo.bikesInUse = getBikesInUseQuantity(bikesData);//ok
   dashboardInfo.newUsers = getNewUsers(usersData); //ok
   dashboardInfo.womenUsers = getWomenUsers(usersData);//ok
-  dashboardInfo.travelsWithRideGiven = getTravelsWithRideGiven(bikesData);
-  dashboardInfo.incidentsHappened = getIncidentsHappened(travelData);//TODO refatorar chamada
-  dashboardInfo.travelsDone = getTravelsDone(travelData);//TODO refatorar chamada
-  dashboardInfo.withdrawalsReason = getWithdrawalsReason(bikesData);
+  dashboardInfo.travelsWithRideGiven = getTravelsWithRideGiven(travelData);
+  dashboardInfo.incidentsHappened = getIncidentsHappened(travelData);//ok
+  dashboardInfo.travelsDone = getTravelsDone(travelData); //ok
+  dashboardInfo.withdrawalsReason = getWithdrawalsReason(travelData);
   dashboardInfo.racialInfo = getRacialInfo(usersData);//ok
   dashboardInfo.gender = getGenderInfo(usersData);//ok
   dashboardInfo.schooling = getSchoolingInfo(usersData);//ok
   dashboardInfo.age = getAgeInfo(usersData);//ok
   dashboardInfo.income = getIncomeInfo(usersData);//ok
-  dashboardInfo.travelTimeInMinutes = getTimeInMinutesFromTravel(bikesData);
+  dashboardInfo.travelTimeInMinutes = getTimeInMinutesFromTravel(travelData);
 
   return dashboardInfo;
 };
@@ -88,24 +88,22 @@ export function getIncidentsHappened(travels: Travel[]): number { //ok
   return incidents;
 }
 
-function getWithdrawalsReason(bikesData: Bike[]): ChartDataProps[] {
+export function getWithdrawalsReason(travels: Travel[]): ChartDataProps[] { //ok
   const withdrawalsReason: string[] = [];
-  bikesData.forEach(bike =>
-    bike.devolutions?.forEach(devolution =>
-      withdrawalsReason.push(devolution.quiz.reason),
-    ),
-  );
+
+  travels.forEach(travel => {
+    if(travel.reason)
+      withdrawalsReason.push(travel.reason);
+  });
   return groupArrayToChartDataProps(withdrawalsReason);
 }
 
-function getDestinations(bikeArray: Bike[]): ChartDataProps[] {
+export function getDestinations(travels: Travel[]): ChartDataProps[] { //ok
   const allDestinations: string[] = [];
-  bikeArray.forEach(bike => {
-    bike.devolutions?.forEach(devolution => {
+  travels.forEach(travel => {
       allDestinations.push(
-        StringUtils.capitalizeString(devolution.quiz.destination),
+        StringUtils.capitalizeString(travel.destination)
       );
-    });
   });
   return groupArrayToChartDataProps(allDestinations)
     .sort((a, b) => b.quantity - a.quantity)
@@ -145,10 +143,8 @@ export function getWomenUsers(users: UserNew[]): number {//ok
   return users.filter(user => user.gender === femininGender).length;
 }
 
-function getTravelsWithRideGiven(bikes: Bike[]): number {
-  return bikes.filter(bike =>
-    bike.devolutions?.filter(devolution => devolution.quiz?.giveRide),
-  ).length;
+export function getTravelsWithRideGiven(travels: Travel[]): number { //ok
+  return travels.filter(travel => travel.giveRide === 'Sim').length;
 }
 
 export function getRacialInfo(users: UserNew[]): ChartDataProps[] { //ok
@@ -208,36 +204,20 @@ export function getIncomeInfo(users: UserNew[]): ChartDataProps[] { //ok
   return groupArrayToChartDataProps(result);
 }
 
-function getTimeInMinutesFromTravel(bikes: Bike[]): number[] {
-  interface TravelTime {
-    withdrawTime?: string;
-    devolutionTime: string;
-    interval: number;
-  }
-
-  const allTravelsTime: TravelTime[] = [];
-
-  bikes.forEach(bike => {
-    bike.devolutions?.forEach(devolution => {
-      const withdrawFromDevolution = bike.withdraws?.find(
-        withdraw => withdraw.id === devolution.withdrawId,
-      );
-      if (withdrawFromDevolution) {
-        allTravelsTime.push({
-          withdrawTime: withdrawFromDevolution?.date,
-          devolutionTime: devolution.date,
-          interval: StringUtils.intervalInMinutesBetweenDates(
-            withdrawFromDevolution?.date,
-            devolution.date,
-          ),
-        });
-      }
-    });
+export function getTimeInMinutesFromTravel(travels: Travel[]): number[] {
+  const times: number[] = [];
+  travels.forEach(travel =>{
+    times.push(
+      StringUtils.intervalInMinutesBetweenDates(
+        travel.initiated_at,
+        travel.finished_at
+      )
+    );
   });
-  return allTravelsTime.map(travelTime => {
-    return travelTime.interval;
-  });
+
+  return times;
 }
+
 
 const Mapper = {
   mapResultToData,

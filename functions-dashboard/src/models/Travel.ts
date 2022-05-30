@@ -1,7 +1,7 @@
 export default interface Travel {
-    community_id:String;
-    destination:String;
-    finished_at: string;//"13/01/2022 22:28:46"
+    community_id:string;
+    destination:string;
+    finished_at:string;//"13/01/2022 22:28:46"
     giveRide: "Não" | "Sim";
     id:string;//"-N31M5PTh6F89Sdq-RHy"
     initiated_at:string;//"13/01/2022 22:08:45"

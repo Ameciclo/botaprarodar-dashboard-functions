@@ -13,7 +13,7 @@ function getMockBikes(){
 
 describe("Migrate Bike LGPD", () =>{
 
-    it("Bike in use",() => {
+    it("Should return quantity of bike in use",() => {
         const count = getBikesInUseQuantity(getMockBikes());
         expect(count).toBe(1);
     });
