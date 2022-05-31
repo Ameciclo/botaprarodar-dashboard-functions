@@ -1,8 +1,0 @@
-{
-  "firebase": {
-    "projectId": "bpr-dev",
-    "databaseURL": "https://bpr-dev.firebaseio.com",
-    "storageBucket": "bpr-dev.appspot.com",
-    "locationId": "us-central"
-  }
-}

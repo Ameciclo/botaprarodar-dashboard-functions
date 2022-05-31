@@ -1,6 +1,6 @@
-import {getNewUsers, getWomenUsers, getRacialInfo, getGenderInfo, getSchoolingInfo, getAgeInfo, getIncomeInfo} from "../../src/service/mapper.ts"
+import {getNewUsers, getWomenUsers, getRacialInfo, getGenderInfo, getSchoolingInfo, getAgeInfo, getIncomeInfo} from "../../src/service/mapper.ts";
 
-import UserNew from "../../src/models/UserNew.ts"
+import UserNew from "../../src/models/UserNew.ts";
 
 var now = new Date()
 

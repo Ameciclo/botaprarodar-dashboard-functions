@@ -5,7 +5,7 @@ import ChartDataProps from '../models/ChartDataProps';
 import Community from '../models/Community';
 import DashboardInfo from '../models/DashboardInfo';
 import { GenderTypes } from '../models/GenderTypes';
-import UserNew from '../models/UserNew';
+import User from '../models/User';
 import StringUtils from '../utils/StringUtils';
 
 
@@ -36,7 +36,7 @@ const DashboardInfoInitialValues: DashboardInfo = {
 const mapResultToData = (
   communitiesData: Community[],
   bikesData: Bike[],
-  usersData: UserNew[],
+  usersData: User[],
   travelData: Travel[],
 ): DashboardInfo => {
   const dashboardInfo: DashboardInfo = DashboardInfoInitialValues;
@@ -46,24 +46,24 @@ const mapResultToData = (
   dashboardInfo.bikesQuantity = bikesData.length;
 
   dashboardInfo.destination = getDestinations(travelData);
-  dashboardInfo.bikesInUse = getBikesInUseQuantity(bikesData);//ok
-  dashboardInfo.newUsers = getNewUsers(usersData); //ok
-  dashboardInfo.womenUsers = getWomenUsers(usersData);//ok
+  dashboardInfo.bikesInUse = getBikesInUseQuantity(bikesData);
+  dashboardInfo.newUsers = getNewUsers(usersData); 
+  dashboardInfo.womenUsers = getWomenUsers(usersData);
   dashboardInfo.travelsWithRideGiven = getTravelsWithRideGiven(travelData);
-  dashboardInfo.incidentsHappened = getIncidentsHappened(travelData);//ok
-  dashboardInfo.travelsDone = getTravelsDone(travelData); //ok
+  dashboardInfo.incidentsHappened = getIncidentsHappened(travelData);
+  dashboardInfo.travelsDone = getTravelsDone(travelData); 
   dashboardInfo.withdrawalsReason = getWithdrawalsReason(travelData);
-  dashboardInfo.racialInfo = getRacialInfo(usersData);//ok
-  dashboardInfo.gender = getGenderInfo(usersData);//ok
-  dashboardInfo.schooling = getSchoolingInfo(usersData);//ok
-  dashboardInfo.age = getAgeInfo(usersData);//ok
-  dashboardInfo.income = getIncomeInfo(usersData);//ok
+  dashboardInfo.racialInfo = getRacialInfo(usersData);
+  dashboardInfo.gender = getGenderInfo(usersData);
+  dashboardInfo.schooling = getSchoolingInfo(usersData);
+  dashboardInfo.age = getAgeInfo(usersData);
+  dashboardInfo.income = getIncomeInfo(usersData);
   dashboardInfo.travelTimeInMinutes = getTimeInMinutesFromTravel(travelData);
 
   return dashboardInfo;
 };
 
-export function getTravelsDone(travels: Travel[]): number { //ok
+export function getTravelsDone(travels: Travel[]): number { 
   
   if(!travels) return 0;
 
@@ -77,7 +77,7 @@ export function getTravelsDone(travels: Travel[]): number { //ok
   return count;
 }
 
-export function getIncidentsHappened(travels: Travel[]): number { //ok
+export function getIncidentsHappened(travels: Travel[]): number { 
   let incidents = 0;
 
   if(!travels) return 0;
@@ -88,7 +88,7 @@ export function getIncidentsHappened(travels: Travel[]): number { //ok
   return incidents;
 }
 
-export function getWithdrawalsReason(travels: Travel[]): ChartDataProps[] { //ok
+export function getWithdrawalsReason(travels: Travel[]): ChartDataProps[] { 
   const withdrawalsReason: string[] = [];
 
   travels.forEach(travel => {
@@ -98,7 +98,7 @@ export function getWithdrawalsReason(travels: Travel[]): ChartDataProps[] { //ok
   return groupArrayToChartDataProps(withdrawalsReason);
 }
 
-export function getDestinations(travels: Travel[]): ChartDataProps[] { //ok
+export function getDestinations(travels: Travel[]): ChartDataProps[] { 
   const allDestinations: string[] = [];
   travels.forEach(travel => {
       allDestinations.push(
@@ -130,24 +130,24 @@ function groupArrayToChartDataProps(allItems: string[]): ChartDataProps[] {
   return chartDataProps.sort((a, b) => b.quantity - a.quantity);
 }
 
-export function getBikesInUseQuantity(bikeArray: Bike[]): number { //ok
+export function getBikesInUseQuantity(bikeArray: Bike[]): number { 
   return bikeArray.filter(bike => bike.inUse).length;
 }
 
-export function getNewUsers(users: UserNew[]): number { //ok
+export function getNewUsers(users: User[]): number {
   return users.filter(user => user.userQuiz?.alreadyUseBPR).length;
 }
 
-export function getWomenUsers(users: UserNew[]): number {//ok
+export function getWomenUsers(users: User[]): number {
   const femininGender: GenderTypes = 'Feminino';
   return users.filter(user => user.gender === femininGender).length;
 }
 
-export function getTravelsWithRideGiven(travels: Travel[]): number { //ok
+export function getTravelsWithRideGiven(travels: Travel[]): number { 
   return travels.filter(travel => travel.giveRide === 'Sim').length;
 }
 
-export function getRacialInfo(users: UserNew[]): ChartDataProps[] { //ok
+export function getRacialInfo(users: User[]): ChartDataProps[] { 
   const result = [] as string[];
 
   users.forEach(user => {
@@ -163,14 +163,14 @@ export function getRacialInfo(users: UserNew[]): ChartDataProps[] { //ok
   return groupArrayToChartDataProps(result);
 }
 
-export function getGenderInfo(users: UserNew[]): ChartDataProps[] { //ok
+export function getGenderInfo(users: User[]): ChartDataProps[] { 
   const genderArray: GenderTypes[] = users.map(user => {
     return user.gender;
   });
   return groupArrayToChartDataProps(genderArray);
 }
 
-export function getSchoolingInfo(users: UserNew[]): ChartDataProps[] { //ok
+export function getSchoolingInfo(users: User[]): ChartDataProps[] { 
   const schoolingArray = users.map(user => {
     return StringUtils.normalizeSchoolingInfo(
       user.schooling,
@@ -180,7 +180,7 @@ export function getSchoolingInfo(users: UserNew[]): ChartDataProps[] { //ok
   return groupArrayToChartDataProps(schoolingArray);
 }
 
-export function getAgeInfo(users: UserNew[]): ChartDataProps[] { //ok
+export function getAgeInfo(users: User[]): ChartDataProps[] { 
   const result: string[] = [];
   users.forEach(user => {
     result.push(StringUtils.normalizeAgeInfo(user.age));
@@ -188,7 +188,7 @@ export function getAgeInfo(users: UserNew[]): ChartDataProps[] { //ok
   return groupArrayToChartDataProps(result);
 }
 
-export function getIncomeInfo(users: UserNew[]): ChartDataProps[] { //ok
+export function getIncomeInfo(users: User[]): ChartDataProps[] { 
   const result = users
     .map(item => item?.income)
     .map(item => {

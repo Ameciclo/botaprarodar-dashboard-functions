@@ -32,7 +32,9 @@ firebase use --add [project_id] (appoint correctly the project that are in use)
 5) If you are trying to deploy in a new environment you need to enable the Billing account to deploy
 https://console.firebase.google.com/project/botaprarodartest/usage/details
 
-6) Deploying 
+6) Configure src/config/serviceAccountKey.json
+
+7) Deploying 
 -> npm run deploy or firebase deploy --only functions
 
 ## REFEERENCE

@@ -1,4 +1,3 @@
-import User from '../models/User';
 import dayjs from './Dayjs';
 
 const normalizeString = (text: string): string => {

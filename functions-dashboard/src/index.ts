@@ -5,8 +5,13 @@ import Community, { mapCommunitiesData } from './models/Community';
 import User, { mapUsersData } from './models/User';
 import Travel, { mapTravelsData } from './models/Travel';
 import Mapper from './service/mapper';
+import serviceAccount from './config/serviceAccountKey.json';
 
-admin.initializeApp(functions.config().firebase);
+admin.initializeApp({
+  credential: admin.credential.cert((<any>serviceAccount).credential),
+  databaseURL: (<any>serviceAccount).databaseURL
+});
+
 const database = admin.database().ref();
 const bikesDatabase = admin.database().ref('bikes');
 const communitiesDatabase = admin.database().ref('communities');
@@ -15,7 +20,7 @@ const travelDatabase = admin.database().ref('travels');
 
 exports.dashboardInfoFunction = functions.pubsub
   // .schedule('00 * * * *') ==> At every hour
-  .schedule('00 00 * * *')
+  .schedule('every 60 minutes')
   .timeZone('America/Sao_Paulo')
   .onRun(async context => {
     const bikesData: Bike[] = mapBikesData(
