@@ -15,7 +15,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - name: Checkout 
+      uses: actions/checkout@v3
+      working-directory: ./functions-dashboard
     - name: Use Node.js 14x
       uses: actions/setup-node@v3
       with:
