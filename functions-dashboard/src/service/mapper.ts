@@ -83,7 +83,7 @@ export function getIncidentsHappened(travels: Travel[]): number {
   if(!travels) return 0;
 
   travels.forEach(travel => {
-        incidents += travel.problemsDuringRiding === 'Sim' ? 1 : 0;
+        incidents += travel.problems_during_riding === 'Sim' ? 1 : 0;
   });
   return incidents;
 }
@@ -144,7 +144,7 @@ export function getWomenUsers(users: User[]): number {
 }
 
 export function getTravelsWithRideGiven(travels: Travel[]): number { 
-  return travels.filter(travel => travel.giveRide === 'Sim').length;
+  return travels.filter(travel => travel.give_ride === 'Sim').length;
 }
 
 export function getRacialInfo(users: User[]): ChartDataProps[] { 
