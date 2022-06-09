@@ -5,9 +5,9 @@ name: Deploy to Firebase Functions - Dev
 
 on:
   push:
-    branches: [ "RefactoringLGPD" ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ "RefactoringLGPD" ]
+    branches: [ "main" ]
 
 jobs:
   build:
