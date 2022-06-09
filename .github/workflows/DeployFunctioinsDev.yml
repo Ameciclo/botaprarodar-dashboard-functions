@@ -38,7 +38,11 @@ jobs:
     - name: Unit test with jest
       working-directory: ./functions-dashboard
       run: npm test
-  
+    - name: Deploy firebase Dev
+      working-directory: ./functions-dashboard
+      run: firebase use --add {{secrets.FIREBASE_PROJECT_ID}}  
+      run: firebase deploy --token {{secrets.FIREBASE_TOKEN}} --only functions --non-interactive
+
 #firebase login
 #firebase use --add project 
 #npm run deploy
