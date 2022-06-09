@@ -17,9 +17,9 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Use Node.js 14x
-      working-directory: ./functions-dashboard
       uses: actions/setup-node@v3
       with:
+        working-directory: ./functions-dashboard
         node-version: 14.x
         cache: 'npm'
         
