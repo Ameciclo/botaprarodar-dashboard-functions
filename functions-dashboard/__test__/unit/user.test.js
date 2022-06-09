@@ -102,7 +102,7 @@ describe('Migration User LGPD', () => {
     expect(map[0].label).toBe("Até 150 reais");
     expect(map[0].quantity).toBe(2);
     expect(map[1].label).toBe("Desejo não informar");
-    expect(map[1].quantity).toBe(1);
+    expect(map[1].quantity).toBe(3);
   });
 
 });
