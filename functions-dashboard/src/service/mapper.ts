@@ -1,11 +1,13 @@
 import dayjs from 'dayjs';
 import Bike from '../models/Bike';
+import Travel from '../models/Travel';
 import ChartDataProps from '../models/ChartDataProps';
 import Community from '../models/Community';
 import DashboardInfo from '../models/DashboardInfo';
 import { GenderTypes } from '../models/GenderTypes';
 import User from '../models/User';
 import StringUtils from '../utils/StringUtils';
+
 
 const DashboardInfoInitialValues: DashboardInfo = {
   usersQuantity: 0,
@@ -35,6 +37,7 @@ const mapResultToData = (
   communitiesData: Community[],
   bikesData: Bike[],
   usersData: User[],
+  travelData: Travel[],
 ): DashboardInfo => {
   const dashboardInfo: DashboardInfo = DashboardInfoInitialValues;
 
@@ -42,64 +45,65 @@ const mapResultToData = (
   dashboardInfo.communitiesQuantity = communitiesData.length;
   dashboardInfo.bikesQuantity = bikesData.length;
 
-  dashboardInfo.destination = getDestinations(bikesData);
+  dashboardInfo.destination = getDestinations(travelData);
   dashboardInfo.bikesInUse = getBikesInUseQuantity(bikesData);
-  dashboardInfo.newUsers = getNewUsers(usersData);
+  dashboardInfo.newUsers = getNewUsers(usersData); 
   dashboardInfo.womenUsers = getWomenUsers(usersData);
-  dashboardInfo.travelsWithRideGiven = getTravelsWithRideGiven(bikesData);
-  dashboardInfo.incidentsHappened = getIncidentsHappened(bikesData);
-  dashboardInfo.travelsDone = getTravelsDone(bikesData);
-  dashboardInfo.withdrawalsReason = getWithdrawalsReason(bikesData);
+  dashboardInfo.travelsWithRideGiven = getTravelsWithRideGiven(travelData);
+  dashboardInfo.incidentsHappened = getIncidentsHappened(travelData);
+  dashboardInfo.travelsDone = getTravelsDone(travelData); 
+  dashboardInfo.withdrawalsReason = getWithdrawalsReason(travelData);
   dashboardInfo.racialInfo = getRacialInfo(usersData);
   dashboardInfo.gender = getGenderInfo(usersData);
   dashboardInfo.schooling = getSchoolingInfo(usersData);
   dashboardInfo.age = getAgeInfo(usersData);
   dashboardInfo.income = getIncomeInfo(usersData);
-  dashboardInfo.travelTimeInMinutes = getTimeInMinutesFromTravel(bikesData);
+  dashboardInfo.travelTimeInMinutes = getTimeInMinutesFromTravel(travelData);
 
   return dashboardInfo;
 };
 
-function getTravelsDone(bikesData: Bike[]): number {
-  let travelsDone = 0;
-  bikesData.forEach(bike => {
-    if (bike.devolutions?.length > 0) {
-      travelsDone += bike.devolutions?.length;
+export function getTravelsDone(travels: Travel[]): number { 
+  
+  if(!travels) return 0;
+
+  let count = 0;
+  travels.forEach(travel => {
+    if (travel.finished_at?.length > 0) {
+      count++;
     }
   });
-  return travelsDone;
+
+  return count;
 }
 
-function getIncidentsHappened(bikesData: Bike[]): number {
+export function getIncidentsHappened(travels: Travel[]): number { 
   let incidents = 0;
-  bikesData.forEach(bike => {
-    if (bike.devolutions && bike.devolutions.length > 0) {
-      bike.devolutions.forEach(devolution => {
-        incidents += devolution.quiz.problemsDuringRiding === 'Sim' ? 1 : 0;
-      });
-    }
+
+  if(!travels) return 0;
+
+  travels.forEach(travel => {
+        incidents += travel.problems_during_riding === 'Sim' ? 1 : 0;
   });
   return incidents;
 }
 
-function getWithdrawalsReason(bikesData: Bike[]): ChartDataProps[] {
+export function getWithdrawalsReason(travels: Travel[]): ChartDataProps[] { 
   const withdrawalsReason: string[] = [];
-  bikesData.forEach(bike =>
-    bike.devolutions?.forEach(devolution =>
-      withdrawalsReason.push(devolution.quiz.reason),
-    ),
-  );
+
+  travels.forEach(travel => {
+    if(travel.reason)
+      withdrawalsReason.push(travel.reason);
+  });
   return groupArrayToChartDataProps(withdrawalsReason);
 }
 
-function getDestinations(bikeArray: Bike[]): ChartDataProps[] {
+export function getDestinations(travels: Travel[]): ChartDataProps[] { 
   const allDestinations: string[] = [];
-  bikeArray.forEach(bike => {
-    bike.devolutions?.forEach(devolution => {
+  travels.forEach(travel => {
       allDestinations.push(
-        StringUtils.capitalizeString(devolution.quiz.destination),
+        StringUtils.capitalizeString(travel.destination)
       );
-    });
   });
   return groupArrayToChartDataProps(allDestinations)
     .sort((a, b) => b.quantity - a.quantity)
@@ -126,26 +130,24 @@ function groupArrayToChartDataProps(allItems: string[]): ChartDataProps[] {
   return chartDataProps.sort((a, b) => b.quantity - a.quantity);
 }
 
-function getBikesInUseQuantity(bikeArray: Bike[]): number {
+export function getBikesInUseQuantity(bikeArray: Bike[]): number { 
   return bikeArray.filter(bike => bike.inUse).length;
 }
 
-function getNewUsers(users: User[]): number {
+export function getNewUsers(users: User[]): number {
   return users.filter(user => user.userQuiz?.alreadyUseBPR).length;
 }
 
-function getWomenUsers(users: User[]): number {
+export function getWomenUsers(users: User[]): number {
   const femininGender: GenderTypes = 'Feminino';
   return users.filter(user => user.gender === femininGender).length;
 }
 
-function getTravelsWithRideGiven(bikes: Bike[]): number {
-  return bikes.filter(bike =>
-    bike.devolutions?.filter(devolution => devolution.quiz?.giveRide),
-  ).length;
+export function getTravelsWithRideGiven(travels: Travel[]): number { 
+  return travels.filter(travel => travel.give_ride === 'Sim').length;
 }
 
-function getRacialInfo(users: User[]): ChartDataProps[] {
+export function getRacialInfo(users: User[]): ChartDataProps[] { 
   const result = [] as string[];
 
   users.forEach(user => {
@@ -161,14 +163,14 @@ function getRacialInfo(users: User[]): ChartDataProps[] {
   return groupArrayToChartDataProps(result);
 }
 
-function getGenderInfo(users: User[]): ChartDataProps[] {
+export function getGenderInfo(users: User[]): ChartDataProps[] { 
   const genderArray: GenderTypes[] = users.map(user => {
     return user.gender;
   });
   return groupArrayToChartDataProps(genderArray);
 }
 
-function getSchoolingInfo(users: User[]): ChartDataProps[] {
+export function getSchoolingInfo(users: User[]): ChartDataProps[] { 
   const schoolingArray = users.map(user => {
     return StringUtils.normalizeSchoolingInfo(
       user.schooling,
@@ -178,15 +180,15 @@ function getSchoolingInfo(users: User[]): ChartDataProps[] {
   return groupArrayToChartDataProps(schoolingArray);
 }
 
-function getAgeInfo(users: User[]): ChartDataProps[] {
+export function getAgeInfo(users: User[]): ChartDataProps[] { 
   const result: string[] = [];
   users.forEach(user => {
-    result.push(StringUtils.normalizeAgeInfo(user));
+    result.push(StringUtils.normalizeAgeInfo(user.age));
   });
   return groupArrayToChartDataProps(result);
 }
 
-function getIncomeInfo(users: User[]): ChartDataProps[] {
+export function getIncomeInfo(users: User[]): ChartDataProps[] { 
   const result = users
     .map(item => item?.income)
     .map(item => {
@@ -202,36 +204,20 @@ function getIncomeInfo(users: User[]): ChartDataProps[] {
   return groupArrayToChartDataProps(result);
 }
 
-function getTimeInMinutesFromTravel(bikes: Bike[]): number[] {
-  interface TravelTime {
-    withdrawTime?: string;
-    devolutionTime: string;
-    interval: number;
-  }
-
-  const allTravelsTime: TravelTime[] = [];
-
-  bikes.forEach(bike => {
-    bike.devolutions?.forEach(devolution => {
-      const withdrawFromDevolution = bike.withdraws?.find(
-        withdraw => withdraw.id === devolution.withdrawId,
-      );
-      if (withdrawFromDevolution) {
-        allTravelsTime.push({
-          withdrawTime: withdrawFromDevolution?.date,
-          devolutionTime: devolution.date,
-          interval: StringUtils.intervalInMinutesBetweenDates(
-            withdrawFromDevolution?.date,
-            devolution.date,
-          ),
-        });
-      }
-    });
+export function getTimeInMinutesFromTravel(travels: Travel[]): number[] {
+  const times: number[] = [];
+  travels.forEach(travel =>{
+    times.push(
+      StringUtils.intervalInMinutesBetweenDates(
+        travel.initiated_at,
+        travel.finished_at
+      )
+    );
   });
-  return allTravelsTime.map(travelTime => {
-    return travelTime.interval;
-  });
+
+  return times;
 }
+
 
 const Mapper = {
   mapResultToData,

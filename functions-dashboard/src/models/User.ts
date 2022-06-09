@@ -12,9 +12,6 @@ export default interface User {
   id: string;
   address: string;
   docNumber: bigint;
-  docPicture: string;
-  docPictureBack: string;
-  residenceProofPicture: string;
   isBlocked: boolean;
   racial: string;
   schooling: string;

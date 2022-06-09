@@ -1,5 +1,4 @@
 import Bicycle from './Bicycle';
-import Withdrawal from './Withdrawal';
 
 export default interface Community {
   id: string;
@@ -10,7 +9,6 @@ export default interface Community {
   org_email: string;
   org_name: string;
   bicycles: Bicycle[];
-  withdrawals: Withdrawal[];
 }
 
 export const mapCommunitiesData = (data: any) => {
