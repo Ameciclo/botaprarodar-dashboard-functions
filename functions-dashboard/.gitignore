@@ -12,3 +12,4 @@ node_modules/
 config/serviceAccountKey.json
 
 .DS_Store
+.env

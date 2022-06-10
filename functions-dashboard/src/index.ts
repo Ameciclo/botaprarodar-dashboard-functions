@@ -5,11 +5,10 @@ import Community, { mapCommunitiesData } from './models/Community';
 import User, { mapUsersData } from './models/User';
 import Travel, { mapTravelsData } from './models/Travel';
 import Mapper from './service/mapper';
-import serviceAccount from './config/serviceAccountKey.json';
 
 admin.initializeApp({
-  credential: admin.credential.cert((<any>serviceAccount).credential),
-  databaseURL: (<any>serviceAccount).databaseURL
+  databaseURL: 'https://bpr-dev-v3.firebaseio.com/',
+  projectId: 'bpr-dev'
 });
 
 const database = admin.database().ref();
