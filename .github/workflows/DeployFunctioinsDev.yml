@@ -40,10 +40,10 @@ jobs:
       run: npm test
     - name: Use firebase project
       working-directory: ./functions-dashboard
-      run: firebase use --add {{secrets.DEV_FIREBASE_PROJECT_ID}}  
+      run: firebase use --token ${{ secrets.DEV_FIREBASE_TOKEN }} --add ${{ secrets.DEV_FIREBASE_PROJECT_ID }}
     - name: Deploy firebase Dev
       working-directory: ./functions-dashboard
-      run: firebase deploy --token {{secrets.DEV_FIREBASE_TOKEN}} --only functions --non-interactive
+      run: firebase deploy --token ${{ secrets.DEV_FIREBASE_TOKEN }} --only functions --non-interactive
 
 #firebase login
 #firebase use --add project 
