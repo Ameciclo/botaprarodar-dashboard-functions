@@ -20,7 +20,7 @@ const travelDatabase = admin.database().ref('travels');
 
 exports.dashboardInfoFunction = functions.pubsub
   // .schedule('00 * * * *') ==> At every hour
-  .schedule('every 120 minutes')
+  .schedule('every 5 minutes')
   .timeZone('America/Sao_Paulo')
   .onRun(async context => {
     const bikesData: Bike[] = mapBikesData(
