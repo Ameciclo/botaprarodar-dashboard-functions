@@ -23,7 +23,15 @@ jobs:
         cache-dependency-path: functions-dashboard/package-lock.json
         node-version: 14.x
         cache: 'npm'
-        
+    - name: Create config file
+      env:
+        DEV_FIREBASE_PROJECT_ID: ${{ secrets.DEV_FIREBASE_PROJECT_ID }}
+      run: |
+        touch .dev
+        echo projectid="$DEV_FIREBASE_PROJECT_ID" >> .dev
+        echo "cat .dev"
+        cat .dev
+
     - name: Build the aplication 
       working-directory: ./functions-dashboard
       run: npm ci
