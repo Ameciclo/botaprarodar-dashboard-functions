@@ -24,12 +24,13 @@ jobs:
         node-version: 14.x
         cache: 'npm'
     - name: Create config file
+      working-directory: ./functions-dashboard/src/config
       env:
         DEV_FIREBASE_PROJECT_ID: ${{ secrets.DEV_FIREBASE_PROJECT_ID }}
         DEV_FIREBASE_DATABASE_URL: ${{ secrets.DEV_FIREBASE_DATABASE_URL }}
       run: |
         touch .dev
-        echo projectid="$DEV_FIREBASE_PROJECT_ID" >> serviceAccountKey.json
+        echo projectId="$DEV_FIREBASE_PROJECT_ID" >> serviceAccountKey.json
         echo databaseURL="$DEV_FIREBASE_DATABASE_URL" >> serviceAccountKey.json
         echo "cat serviceAccountKey.json"
         cat serviceAccountKey.json
