@@ -8,8 +8,8 @@ import Mapper from './service/mapper';
 import serviceAccountKey from './config/serviceAccountKey.json'
 
 admin.initializeApp({
-  databaseURL: <any> serviceAccountKey.databaseURL,
-  projectId: <any> serviceAccountKey.projectId
+  databaseURL: (<any> serviceAccountKey).databaseURL,
+  projectId: (<any> serviceAccountKey).projectId
 });
 
 const database = admin.database().ref();
