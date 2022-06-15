@@ -1,3 +1,8 @@
+[![Unit Test - Jest](https://github.com/Ameciclo/botaprarodar-dashboard-functions/actions/workflows/Unittest.yml/badge.svg?branch=main)](https://github.com/Ameciclo/botaprarodar-dashboard-functions/actions/workflows/Unittest.yml)
+
+[![Deploy to Firebase - Dev](https://github.com/Ameciclo/botaprarodar-dashboard-functions/actions/workflows/DeployFunctioinsDev.yml/badge.svg?branch=main)](https://github.com/Ameciclo/botaprarodar-dashboard-functions/actions/workflows/DeployFunctioinsDev.yml)
+
+[![Deploy to Firebase - PROD](https://github.com/Ameciclo/botaprarodar-dashboard-functions/actions/workflows/DeployFunctioinsProduction.yml/badge.svg?branch=production)](https://github.com/Ameciclo/botaprarodar-dashboard-functions/actions/workflows/DeployFunctioinsProduction.yml)
 
 ## HOW TO CONFIGURATE THE APLICATION 
 
