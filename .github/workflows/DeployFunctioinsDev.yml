@@ -53,7 +53,9 @@ jobs:
     - name: Generating automatic tag 
       uses: Klemensas/action-autotag@stable
       with:
+        GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
         package_root: ./functions-dashboard
+        tag_prefix: "Dev_v"
 
     - name: Use firebase project
       working-directory: ./functions-dashboard
