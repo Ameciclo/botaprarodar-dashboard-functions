@@ -51,10 +51,10 @@ jobs:
       run: npm test
     
     - name: Generating automatic tag 
-      working-directory: ./functions-dashboard
       uses: Klemensas/action-autotag@stable
       with:
         GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+        package_root: ./functions-dashboard
 
     - name: Use firebase project
       working-directory: ./functions-dashboard
