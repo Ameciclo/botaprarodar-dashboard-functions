@@ -1,9 +1,9 @@
-name: Firebase Functions - UnitTest
+name: Unit Test - Jest
 
 on: [push, pull_request]
 
 jobs:
-  BuildAndDeployInFunctionsInFirebase:
+  RunUnitTestWithJest:
     runs-on: ubuntu-latest
 
     steps:
