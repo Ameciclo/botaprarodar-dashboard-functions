@@ -51,6 +51,7 @@ jobs:
       run: npm test
     
     - name: Generating automatic tag 
+      working-directory: ./functions-dashboard
       uses: Klemensas/action-autotag@stable
       with:
         GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
