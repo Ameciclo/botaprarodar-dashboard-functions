@@ -10,8 +10,7 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
-
+  Build:
     runs-on: ubuntu-latest
 
     steps:
@@ -48,16 +47,22 @@ jobs:
     - name: Install Jest globally
       working-directory: ./functions-dashboard
       run: sudo npm install -g jest
+ 
+  UnitTest:
+    needs: Build
+    runs-on: ubuntu-latest
+    steps:
     - name: Unit test with jest
       working-directory: ./functions-dashboard
       run: npm test
+
+  DeployInFirebase:
+    needs: [Build,UnitTest]
+    runs-on: ubuntu-latest
+    steps:
     - name: Use firebase project
       working-directory: ./functions-dashboard
       run: firebase use --token ${{ secrets.DEV_FIREBASE_TOKEN }} --add ${{ secrets.DEV_FIREBASE_PROJECT_ID }}
     - name: Deploy firebase Dev
       working-directory: ./functions-dashboard
       run: firebase deploy --token ${{ secrets.DEV_FIREBASE_TOKEN }} --only functions --non-interactive
-
-#firebase login
-#firebase use --add project 
-#npm run deploy
