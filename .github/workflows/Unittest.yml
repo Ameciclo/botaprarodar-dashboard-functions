@@ -1,13 +1,6 @@
-# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
-# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+name: Firebase Functions - UnitTest
 
-name: Deploy to Firebase Functions - Dev
-
-on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+on: [push, pull_request]
 
 jobs:
   BuildAndDeployInFunctionsInFirebase:
@@ -51,10 +44,3 @@ jobs:
     - name: Unit test with jest
       working-directory: ./functions-dashboard
       run: npm test
-
-    - name: Use firebase project
-      working-directory: ./functions-dashboard
-      run: firebase use --token ${{ secrets.DEV_FIREBASE_TOKEN }} --add ${{ secrets.DEV_FIREBASE_PROJECT_ID }}
-    - name: Deploy firebase Dev
-      working-directory: ./functions-dashboard
-      run: firebase deploy --token ${{ secrets.DEV_FIREBASE_TOKEN }} --only functions --non-interactive
