@@ -35,6 +35,10 @@ exports.dashboardInfoFunction = functions.pubsub
     const travelData: Travel[] = mapTravelsData(
       (await travelDatabase.once('value')).toJSON(),
     );
+
+      console.log(travelData);
+      
+
     const dashboardInfo = Mapper.mapResultToData(
       communitiesData,
       bikesData,
